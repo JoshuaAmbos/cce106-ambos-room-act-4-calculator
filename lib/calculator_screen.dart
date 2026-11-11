@@ -72,13 +72,158 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   }
 
   @override
+  void dispose() {
+    firstNumberController.dispose();
+    secondNumberController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Stateful Calculator'),
+        centerTitle: true,
+        backgroundColor: Colors.indigo,
+        foregroundColor: Colors.white,
       ),
-      body: const Center(
-        child: Text('Calculator Design'),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const Icon(
+              Icons.calculate,
+              size: 64,
+              color: Colors.indigo,
+            ),
+            const SizedBox(height: 12),
+
+            const Text(
+              'BASIC CALCULATOR',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            TextField(
+              controller: firstNumberController,
+              keyboardType:  const TextInputType.numberWithOptions(
+                decimal: true,
+                signed: true,
+              ),
+              decoration: const InputDecoration(
+                labelText: 'First Number',
+                hintText: 'Enter the first number',
+                prefixIcon: Icon(Icons.looks_one),
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            TextField(
+              controller: secondNumberController,
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+                signed: true,
+              ),
+              decoration: const InputDecoration(
+                labelText: 'Second Number',
+                hintText: 'Enter the second number',
+                prefixIcon: Icon(Icons.looks_two),
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            Wrap(
+              alignment: WrapAlignment.center,
+              spacing: 12,
+              runSpacing: 12,
+              children: [
+                ElevatedButton(
+                  onPressed: () => calculate('+'),
+                  child: const Text(
+                    '+',
+                    style: TextStyle(fontSize: 24),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () => calculate('-'),
+                  child: const Text(
+                    '−',
+                    style: TextStyle(fontSize: 24),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () => calculate('×'),
+                  child: const Text(
+                    '×',
+                    style: TextStyle(fontSize: 24),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () => calculate('÷'),
+                  child: const Text(
+                    '÷',
+                    style: TextStyle(fontSize: 24),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+  
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: Colors.indigo.shade50,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.indigo),
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    operationLabel,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 12),
+                  const Text(
+                    'RESULT',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    result,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.indigo,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+  
+            OutlinedButton.icon(
+              onPressed: clearCalculator,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Clear'),
+            ),
+            const SizedBox(height: 24),
+  
+            const Text(
+              'Created by: AMBOS, JOSHUA\nSection: CCE 106 (3447)',
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
     );
   }

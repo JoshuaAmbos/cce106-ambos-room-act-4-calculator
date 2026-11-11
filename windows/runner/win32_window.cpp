@@ -134,10 +134,22 @@ bool Win32Window::Create(const std::wstring& title,
   UINT dpi = FlutterDesktopGetDpiForMonitor(monitor);
   double scale_factor = dpi / 96.0;
 
+  // Window style: WS_OVERLAPPEDWINDOW allows resizing.
+  // If you want a fixed phone container (no maximizing/stretching), use:
+  // DWORD style = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
+  DWORD style = WS_OVERLAPPEDWINDOW;
+
+  // Calculate the outer window rect so the inner Flutter canvas is EXACTLY size.width x size.height
+  RECT rect = { 0, 0, static_cast<LONG>(size.width), static_cast<LONG>(size.height) };
+  AdjustWindowRectEx(&rect, style, FALSE, 0);
+
+  int window_width = rect.right - rect.left;
+  int window_height = rect.bottom - rect.top;
+
   HWND window = CreateWindow(
-      window_class, title.c_str(), WS_OVERLAPPEDWINDOW,
+      window_class, title.c_str(), style,
       Scale(origin.x, scale_factor), Scale(origin.y, scale_factor),
-      Scale(size.width, scale_factor), Scale(size.height, scale_factor),
+      window_width, window_height,  // Exact dimensions without DPI inflation
       nullptr, nullptr, GetModuleHandle(nullptr), this);
 
   if (!window) {
